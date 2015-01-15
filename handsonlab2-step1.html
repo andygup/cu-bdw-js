@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!--The viewport meta tag is used to improve the presentation and behavior
+    of the samples on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Lab 2 - Step 1</title>
+    <link rel="stylesheet" href="http://js.arcgis.com/3.12/esri/css/esri.css">
+    <style>
+        html, body, #mapDiv { height: 100%; width: 100%; margin: 0; padding: 0; }
+
+        #searchDiv {
+            display: block;
+            position: absolute;
+            z-index: 2;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="searchDiv"></div>
+    <div id="mapDiv"></div>
+
+    <script src="http://js.arcgis.com/3.12compact"></script>
+
+    <script>
+
+        require([
+            "esri/map",
+            "esri/dijit/Geocoder",
+            "esri/layers/FeatureLayer",
+            "dojo/domReady!"
+        ], function(
+                Map,
+                Geocoder,
+                FeatureLayer
+        ) {
+
+            // Create a basic map
+            // https://developers.arcgis.com/javascript/jsapi/map-amd.html
+            var map = new Map("mapDiv", {
+                center: [-122.68, 45.5],
+                zoom: 15,
+                basemap: "dark-gray"
+            });
+
+            // Create a search widget
+            // https://developers.arcgis.com/javascript/jsapi/geocoder-amd.html
+            geocoder = new Geocoder({
+                map: map
+            }, "searchDiv");
+
+            geocoder.startup();
+
+            //
+            // Step 1
+            //
+
+            // Create an instance of a FeatureLayer
+            // https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html
+            var featureLayer = new FeatureLayer("http://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/Bike_Parking/FeatureServer/0",{
+                outFields: ["*"] // we want to return all data fields
+            });
+
+            // Add the FeatureLayer to the map
+            // https://developers.arcgis.com/javascript/jsapi/map-amd.html#addlayer
+            map.addLayer(featureLayer);
+        });
+    </script>
+</body>
+</html>

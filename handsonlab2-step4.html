@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!--The viewport meta tag is used to improve the presentation and behavior
+    of the samples on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Lab 2 - Step 4</title>
+    <link rel="stylesheet" href="http://js.arcgis.com/3.12/esri/css/esri.css">
+    <style>
+        html, body, #mapDiv { height: 100%; width: 100%; margin: 0; padding: 0; }
+
+        #searchDiv {
+            display: block;
+            position: absolute;
+            z-index: 2;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="searchDiv"></div>
+    <div id="mapDiv"></div>
+
+    <script src="http://js.arcgis.com/3.12compact"></script>
+
+    <script>
+
+        require([
+            "esri/map",
+            "esri/dijit/Geocoder",
+            "esri/layers/FeatureLayer",
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/renderers/SimpleRenderer",
+            "dojo/_base/Color",
+            "dojo/domReady!"
+        ], function(
+                Map,
+                Geocoder,
+                FeatureLayer,
+                SimpleMarkerSymbol, SimpleRenderer, Color
+        ) {
+
+            var map = new Map("mapDiv", {
+                center: [-122.68, 45.5],
+                zoom: 15,
+                basemap: "dark-gray"
+            });
+
+            // Create a search widget
+            // https://developers.arcgis.com/javascript/jsapi/geocoder-amd.html
+            geocoder = new Geocoder({
+                map: map
+            }, "searchDiv");
+
+            geocoder.startup();
+
+            var featureLayer = new FeatureLayer("http://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/Bike_Parking/FeatureServer/0",{
+                outFields: ["*"]
+            });
+
+            // Want to learn more about the "on" event? Go to https://developers.arcgis.com/javascript/jshelp/inside_events.html
+            // For info on the "load" event go to https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html#event-load
+            featureLayer.on("load",function(evt){
+
+                // Create our new symbol and define its properties
+                // https://developers.arcgis.com/javascript/jsapi/simplemarkersymbol-amd.html
+                var symbol = new SimpleMarkerSymbol();
+                symbol.style = SimpleMarkerSymbol.STYLE_CIRCLE;
+                symbol.setSize(14);
+                symbol.setColor(new Color([255,255,0,0.5]));
+
+                // Add the symbol to a simple renderer.
+                // https://developers.arcgis.com/javascript/jsapi/simplerenderer-amd.html
+                var renderer = new SimpleRenderer(symbol);
+
+                // Apply the renderer to the featureLayer
+                // https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html#setrenderer
+                featureLayer.setRenderer(renderer);
+            });
+
+            map.addLayer(featureLayer);
+
+            //
+            // Step 4
+            //
+
+            // Let's add a basic click handler to the map just to see how one works.
+            // https://developers.arcgis.com/javascript/jshelp/intro_formatinfowindow.html
+            map.on("click", function(evt) {
+                map.infoWindow.setTitle("Coordinates");
+                map.infoWindow.setContent("lat/lon : " + evt.mapPoint.y + ", " + evt.mapPoint.x);
+                map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
+            });
+        });
+    </script>
+</body>
+</html>
