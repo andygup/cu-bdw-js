@@ -24,25 +24,23 @@
     <div id="mapDiv"></div>
 
     <script src="http://js.arcgis.com/3.12compact"></script>
-
     <script>
+
+        var map, geocoder;
 
         require([
             "esri/map",
             "esri/dijit/Geocoder",
-            "esri/layers/FeatureLayer",
             "dojo/domReady!"
         ], function(
                 Map,
-                Geocoder,
-                FeatureLayer
+                Geocoder
         ) {
-
             // Create a basic map
             // https://developers.arcgis.com/javascript/jsapi/map-amd.html
-            var map = new Map("mapDiv", {
-                center: [-122.68, 45.5],
-                zoom: 15,
+            map = new Map("mapDiv", {
+                center: [-98, 39],
+                zoom: 4,
                 basemap: "dark-gray"
             });
 
@@ -54,19 +52,6 @@
 
             geocoder.startup();
 
-            //
-            // Step 1
-            //
-
-            // Create an instance of a FeatureLayer
-            // https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html
-            var featureLayer = new FeatureLayer("http://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/Bike_Parking/FeatureServer/0",{
-                outFields: ["*"] // we want to return all data fields
-            });
-
-            // Add the FeatureLayer to the map
-            // https://developers.arcgis.com/javascript/jsapi/map-amd.html#addlayer
-            map.addLayer(featureLayer);
         });
     </script>
 </body>

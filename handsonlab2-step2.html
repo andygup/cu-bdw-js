@@ -24,24 +24,21 @@
     <div id="mapDiv"></div>
 
     <script src="http://js.arcgis.com/3.12compact"></script>
-
     <script>
 
         require([
             "esri/map",
             "esri/dijit/Geocoder",
             "esri/layers/FeatureLayer",
-            "esri/symbols/SimpleMarkerSymbol",
-            "esri/renderers/SimpleRenderer",
-            "dojo/_base/Color",
             "dojo/domReady!"
         ], function(
                 Map,
                 Geocoder,
-                FeatureLayer,
-                SimpleMarkerSymbol, SimpleRenderer, Color
+                FeatureLayer
         ) {
 
+            // Create a basic map
+            // https://developers.arcgis.com/javascript/jsapi/map-amd.html
             var map = new Map("mapDiv", {
                 center: [-122.68, 45.5],
                 zoom: 15,
@@ -56,29 +53,19 @@
 
             geocoder.startup();
 
+            //
+            // Step 2
+            //
+
+            // Create an instance of a FeatureLayer
+            // https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html
             var featureLayer = new FeatureLayer("http://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/Bike_Parking/FeatureServer/0",{
-                outFields: ["*"]
+                outFields: ["*"] // we want to return all data fields
             });
+
+            // Add the FeatureLayer to the map
+            // https://developers.arcgis.com/javascript/jsapi/map-amd.html#addlayer
             map.addLayer(featureLayer);
-
-            //
-            // Step 2 - we also 'require' the corresponding libraries above to make this work
-            //
-
-            // Create our new symbol and define its properties
-            // https://developers.arcgis.com/javascript/jsapi/simplemarkersymbol-amd.html
-            var symbol = new SimpleMarkerSymbol();
-            symbol.style = SimpleMarkerSymbol.STYLE_CIRCLE;
-            symbol.setSize(14);
-            symbol.setColor(new Color([255,255,0,0.5]));
-
-            // Add the symbol to a simple renderer.
-            // https://developers.arcgis.com/javascript/jsapi/simplerenderer-amd.html
-            var renderer = new SimpleRenderer(symbol);
-
-            // Apply the renderer to the featureLayer
-            // https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html#setrenderer
-            featureLayer.setRenderer(renderer);
         });
     </script>
 </body>
